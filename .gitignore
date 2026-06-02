@@ -1,0 +1,21 @@
+# Cache y configuraciones de Gradle
+.gradle/
+build/
+
+# Configuraciones locales de IDEs (IntelliJ, NetBeans, Eclipse)
+.idea/
+*.iml
+*.iws
+nbproject/private/
+nbdist/
+dist/
+
+# Archivos de Sistema y Entorno (CRUCIAL)
+.env
+.env.local
+.DS_Store
+Thumbs.db
+
+# Archivos de bitácora y logs
+*.log
+
