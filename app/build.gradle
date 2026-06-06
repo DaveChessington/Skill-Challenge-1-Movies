@@ -16,13 +16,15 @@ repositories {
 }
 
 dependencies {
-    // Use JUnit Jupiter for testing.
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
+    // conection to MySQL for Java
+    implementation 'com.mysql:mysql-connector-j:9.1.0'
 
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-    // This dependency is used by the application.
+    // default dependency (Guava)
     implementation 'com.google.guava:guava:32.1.1-jre'
+
+    // unitary test compatible with Java 21
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -34,7 +36,7 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = 'cinema.App'
+    mainClass = 'metaphorce.vista.Main'
 }
 
 tasks.named('test') {

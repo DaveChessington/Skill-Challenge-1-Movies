@@ -12,7 +12,7 @@ import java.sql.DriverManager;
  * @author David-PC
  */
 public class Controller {
-    String DB="Cinemas";
+    String DB="Cinema";
     String URL="jdbc:mysql://localhost:3306/%s".formatted(DB);
     String USER="root";
     String PASSWORD="root";

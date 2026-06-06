@@ -18,10 +18,17 @@ public class Database {
     Controller control = new Controller();
 
     //CRUD peliculas
-    void addPelicula(Pelicula p) {
+    public void addPelicula(Pelicula p) {
         Connection con = control.getConection();
         String query = "INSERT into Peliculas (titulo,director,sinopsis,duracion,disponible) Values(?,?,?,?,?) ";
+        String comp="SELECT * FROM Peliculas where titulo=?";
         try {
+            PreparedStatement c=con.prepareStatement(comp);
+            c.setString(1,p.getTitulo());
+            ResultSet res = c.executeQuery();
+            if (res.next()){
+                throw new Exception("Movie already registered");
+            }
             PreparedStatement ps = con.prepareStatement(query);
             ps.setString(1, p.getTitulo());
             ps.setString(2, p.getDirector());
@@ -41,7 +48,7 @@ public class Database {
         }
     }
 
-    ArrayList<Pelicula> ListPeliculas() {
+    public ArrayList<Pelicula> ListPeliculas() {
         Connection con = control.getConection();
         String query = "SELECT * FROM Peliculas";
         ArrayList<Pelicula> movies = new ArrayList<>();
@@ -54,8 +61,8 @@ public class Database {
                 String titulo = res.getString("titulo");
                 String driector = res.getString("director");
                 String sinopsis = res.getString("sinopsis");
-                boolean disponible = Boolean.parseBoolean(res.getString("disponible"));
-                int duracion = Integer.parseInt(res.getString("duracion"));
+                boolean disponible = res.getBoolean("disponible");
+                int duracion = res.getInt("duracion");
 
                 p.setId_pelicula(id_pelicula);
                 p.setDirector(driector);
@@ -75,7 +82,7 @@ public class Database {
         return movies;
     }
 
-    ArrayList<Pelicula> getAvailabilityPeliculas(boolean isAvailable) {
+    public ArrayList<Pelicula> getAvailabilityPeliculas(boolean isAvailable) {
         Connection con = control.getConection();
         String query = "SELECT * FROM Peliculas where disponible=?";
         ArrayList<Pelicula> movies = new ArrayList<>();
@@ -110,27 +117,25 @@ public class Database {
         return movies;
     }
 
-    Pelicula getPelicula(int id) {
+    public Pelicula getPelicula(int id) {
         Connection con = control.getConection();
         String query = "SELECT * FROM Peliculas where id_pelicula=?";
-        Pelicula p = new Pelicula();
+        Pelicula p = null;
         try {
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, id);
             ResultSet res = ps.executeQuery();
-            int id_pelicula = Integer.parseInt(res.getString("id_pelicula"));
-            String titulo = res.getString("titulo");
-            String driector = res.getString("director");
-            String sinopsis = res.getString("sinopsis");
-            boolean disponible = Boolean.parseBoolean(res.getString("disponible"));
-            int duracion = Integer.parseInt(res.getString("duracion"));
 
-            p.setId_pelicula(id_pelicula);
-            p.setDirector(driector);
-            p.setDuracion(duracion);
-            p.setSinopsis(sinopsis);
-            p.setTitulo(titulo);
-            p.setDisponible(disponible);
+            if (res.next()) {
+                p = new Pelicula();
+
+                p.setId_pelicula(res.getInt("id_pelicula"));
+                p.setTitulo(res.getString("titulo"));
+                p.setDirector(res.getString("director"));
+                p.setSinopsis(res.getString("sinopsis"));
+                p.setDisponible(res.getBoolean("disponible"));
+                p.setDuracion(res.getInt("duracion"));
+            }
 
             control.closeConection();
         } catch (Exception e) {
@@ -142,7 +147,7 @@ public class Database {
         return p;
     }
 
-    void changeAvailability(int id) {
+    public void changeAvailability(int id) {
         Connection con = control.getConection();
         String query = "UPDATE Peliculas SET disponible = NOT disponible WHERE id_pelicula = ?";
         try {
@@ -161,10 +166,9 @@ public class Database {
         }
     }
 
-
-    void deletePelicula(int id) {
+    public void deletePelicula(int id) {
         Connection con = control.getConection();
-        String query = "delete Peliculas where id_pelicula=?";
+        String query = "delete FROM Peliculas where id_pelicula=?";
         try {
             
             PreparedStatement ps = con.prepareStatement(query);
