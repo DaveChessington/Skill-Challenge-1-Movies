@@ -38,6 +38,16 @@ public class Cinema {
     public void setId_cinema(int id_cinema) {
         this.id_cinema = id_cinema;
     }
-    
-    
+
+    @Override
+    public boolean equals(Object obj){
+        //Check if they belong to the same class
+        if (this.getClass() != obj.getClass()) {
+            return false;
+        }
+        Cinema other=(Cinema) obj;
+        return this.getNombre().equals(other.getNombre());
+    }
+
+
 }

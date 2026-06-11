@@ -78,6 +78,14 @@ public class Pelicula {
     public void setSinopsis(String sinopsis) {
         this.sinopsis = sinopsis;
     }
-    
-    
+
+    @Override
+    public boolean equals(Object obj){
+        //Check if they belong to the same class
+        if (this.getClass() != obj.getClass()) {
+            return false;
+        }
+        Pelicula other=(Pelicula) obj;
+        return this.getTitulo().equals(other.getTitulo()) && this.getDirector().equals(other.getDirector());
+    }
 }

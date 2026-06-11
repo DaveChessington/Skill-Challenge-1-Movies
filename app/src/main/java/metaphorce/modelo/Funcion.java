@@ -83,6 +83,30 @@ public class Funcion {
     public void setId_sala(int id_sala) {
         this.id_sala = id_sala;
     }
-    
-    
+
+    @Override
+    public boolean equals(Object obj){
+        //Check if they belong to the same class
+        if (this.getClass() != obj.getClass()) {
+            return false;
+        }
+        Funcion other=(Funcion) obj;
+        return this.getDia().equals(other.getDia()) &&
+                this.getHora().equals(other.getHora()) &&
+                this.getId_pelicula()==other.getId_pelicula() &&
+                this.getId_sala()==other.getId_sala();
+    }
+
+    @Override
+    public String toString() {
+        return "Funcion{" +
+                "id_funcion=" + id_funcion +
+                ", dia='" + dia + '\'' +
+                ", hora='" + hora + '\'' +
+                ", disponible=" + disponible +
+                ", asientos_disponibles=" + asientos_disponibles +
+                ", id_pelicula=" + id_pelicula +
+                ", id_sala=" + id_sala +
+                '}';
+    }
 }

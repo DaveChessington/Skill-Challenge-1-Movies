@@ -3,9 +3,8 @@ package metaphorce.modelo;
 public class Venta {
     private int id_venta;
     private String comprador;
-    private int asientos_reservados;
+    private int no_asientos_reservados;
     private double importe;
-    private int id_funcion;
 
     public int getId_venta() {
         return id_venta;
@@ -23,12 +22,12 @@ public class Venta {
         this.comprador = comprador;
     }
 
-    public int getAsientos_reservados() {
-        return asientos_reservados;
+    public int getNo_asientos_reservados() {
+        return no_asientos_reservados;
     }
 
-    public void setAsientos_reservados(int asientos_reservados) {
-        this.asientos_reservados = asientos_reservados;
+    public void setNo_asientos_reservados(int no_asientos_reservados) {
+        this.no_asientos_reservados = no_asientos_reservados;
     }
 
     public double getImporte() {
@@ -39,13 +38,27 @@ public class Venta {
         this.importe = importe;
     }
 
-    public int getId_funcion() {
-        return id_funcion;
+    @Override
+    public boolean equals(Object obj){
+        //Check if they belong to the same class
+        if (this.getClass() != obj.getClass()) {
+            return false;
+        }
+        Venta other=(Venta) obj;
+        return this.id_venta == other.id_venta &&
+                this.no_asientos_reservados == other.no_asientos_reservados &&
+                Double.compare(this.importe, other.importe) == 0 &&
+                java.util.Objects.equals(this.comprador, other.comprador);
+
     }
 
-    public void setId_funcion(int id_funcion) {
-        this.id_funcion = id_funcion;
+    @Override
+    public String toString() {
+        return "Venta{" +
+                "id_venta=" + id_venta +
+                ", comprador='" + comprador + '\'' +
+                ", no_asientos_reservados=" + no_asientos_reservados +
+                ", importe=" + importe +
+                '}';
     }
-
-    
 }

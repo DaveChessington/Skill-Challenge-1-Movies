@@ -53,6 +53,26 @@ public class Sala {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-    
-    
+
+    @Override
+    public boolean equals(Object obj){
+        //Check if they belong to the same class
+        if (this.getClass() != obj.getClass()) {
+            return false;
+        }
+        Sala other=(Sala) obj;
+        return this.getNombre().equals(other.getNombre()) &&
+                this.getNo_asientos()==other.getNo_asientos() &&
+                this.getId_cinema()== other.getId_cinema();
+    }
+
+    @Override
+    public String toString() {
+        return "Sala{" +
+                "id_sala=" + id_sala +
+                ", nombre='" + nombre + '\'' +
+                ", no_asientos=" + no_asientos +
+                ", id_cinema=" + id_cinema +
+                '}';
+    }
 }
