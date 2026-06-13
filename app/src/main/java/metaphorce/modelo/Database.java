@@ -7,6 +7,7 @@ package metaphorce.modelo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -185,4 +186,86 @@ public class Database {
             System.out.println(e.getMessage());
         }
     }
+
+    //CRUD cinemas
+    public void addCinema(Cinema c){
+        Connection con= control.getConection();
+        String query="INSERT INTO Cinemas (nombre) VALUES(?)";
+        try{
+            PreparedStatement ps=con.prepareStatement(query);
+            ps.setString(1,c.getNombre());
+            int filasAfectadas = ps.executeUpdate();
+            if (filasAfectadas > 0) {
+                System.out.println("cinema already added succesfully");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        control.closeConection();
+    }
+
+    public ArrayList<Cinema> ListCinemas(){
+        Connection con=control.getConection();
+        String query="SELECT * FROM Cinemas";
+        ArrayList<Cinema> cines=new ArrayList<>();
+        try{
+            PreparedStatement ps=con.prepareStatement(query);
+            ResultSet res=ps.executeQuery();
+            while (res.next()) {
+                Cinema c=new Cinema();
+                int id_cinema=res.getInt("id_cinema");
+                String nombre=res.getString("nombre");
+
+                c.setId_cinema(id_cinema);
+                c.setNombre(nombre);
+
+                cines.add(c);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return cines;
+    }
+
+    public Cinema getCinema(int id){
+        Connection con=control.getConection();
+        String query="SELECT * FROM Cinemas where id_cinema=?";
+        ArrayList<Cinema> cines=new ArrayList<>();
+        Cinema c=null;
+        try{
+            PreparedStatement ps=con.prepareStatement(query);
+            ps.setInt(1,id);
+            ResultSet res=ps.executeQuery();
+            if (res.next()){
+               c=new Cinema();
+               c.setId_cinema(res.getInt("id_cinema"));
+               c.setNombre(res.getString("nombre"));
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return c;
+    }
+
+    public void deleteCinema(int id){
+        Connection con = control.getConection();
+        String query = "delete FROM Cinemas where id_cinema=?";
+        try {
+
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, id);
+            int filasAfectadas = ps.executeUpdate();
+            if (filasAfectadas > 0) {
+                System.out.println("deleted cinema");
+            }
+            control.closeConection();
+        } catch (Exception e) {
+            if (con != null) {
+                control.closeConection();
+            }
+            System.out.println(e.getMessage());
+        }
+    }
+
+
 }
