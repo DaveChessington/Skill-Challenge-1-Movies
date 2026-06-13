@@ -4,6 +4,8 @@
  */
 package metaphorce.modelo;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,13 +42,10 @@ public class Database {
             if (filasAfectadas > 0) {
                 System.out.println("movie added succesfully");
             }
-            control.closeConection();
         } catch (Exception e) {
-            if (con != null) {
-                control.closeConection();
-            }
             System.out.println(e.getMessage());
         }
+        control.closeConection();
     }
 
     public ArrayList<Pelicula> ListPeliculas() {
@@ -73,13 +72,10 @@ public class Database {
                 p.setDisponible(disponible);
                 movies.add(p);
             }
-            control.closeConection();
         } catch (Exception e) {
-            if (con != null) {
-                control.closeConection();
-            }
             System.out.println(e.getMessage());
         }
+        control.closeConection();
         return movies;
     }
 
@@ -108,13 +104,10 @@ public class Database {
                 p.setDisponible(disponible);
                 movies.add(p);
             }
-            control.closeConection();
         } catch (Exception e) {
-            if (con != null) {
-                control.closeConection();
-            }
             System.out.println(e.getMessage());
         }
+        control.closeConection();
         return movies;
     }
 
@@ -137,14 +130,10 @@ public class Database {
                 p.setDisponible(res.getBoolean("disponible"));
                 p.setDuracion(res.getInt("duracion"));
             }
-
-            control.closeConection();
         } catch (Exception e) {
-            if (con != null) {
-                control.closeConection();
-            }
             System.out.println(e.getMessage());
         }
+        control.closeConection();
         return p;
     }
 
@@ -158,13 +147,10 @@ public class Database {
             if (filasAfectadas > 0) {
                 System.out.println("updated movie");
             }
-            control.closeConection();
         } catch (Exception e) {
-            if (con != null) {
-                control.closeConection();
-            }
             System.out.println(e.getMessage());
         }
+        control.closeConection();
     }
 
     public void deletePelicula(int id) {
@@ -178,13 +164,10 @@ public class Database {
             if (filasAfectadas > 0) {
                 System.out.println("deleted movie");
             }
-            control.closeConection();
         } catch (Exception e) {
-            if (con != null) {
-                control.closeConection();
-            }
             System.out.println(e.getMessage());
         }
+        control.closeConection();
     }
 
     //CRUD cinemas
@@ -224,6 +207,7 @@ public class Database {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        control.closeConection();
         return cines;
     }
 
@@ -244,6 +228,7 @@ public class Database {
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
+        control.closeConection();
         return c;
     }
 
@@ -251,20 +236,102 @@ public class Database {
         Connection con = control.getConection();
         String query = "delete FROM Cinemas where id_cinema=?";
         try {
-
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, id);
             int filasAfectadas = ps.executeUpdate();
             if (filasAfectadas > 0) {
                 System.out.println("deleted cinema");
             }
-            control.closeConection();
         } catch (Exception e) {
-            if (con != null) {
-                control.closeConection();
-            }
             System.out.println(e.getMessage());
         }
+        control.closeConection();
+    }
+
+    //CRUD Salas de cine
+    public void addSala(Sala s){
+        Connection con=control.getConection();
+        String query="INSERT INTO Salas (nombre, no_columnas, no_filas, id_cinema) VALUES(?,?,?,?)";
+        try{
+            PreparedStatement ps=con.prepareStatement(query);
+            ps.setString(1,s.getNombre());
+            ps.setInt(2,s.getNo_columnas());
+            ps.setInt(3,s.getNo_filas());
+            ps.setInt(4,s.getId_cinema());
+
+            int filasAfectadas = ps.executeUpdate();
+            if (filasAfectadas > 0) {
+                System.out.println("cinema already added succesfully");
+            }
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        control.closeConection();
+
+    }
+
+    public ArrayList<Sala> ListSalas(){
+        Connection con=control.getConection();
+        String query="SELECT * FROM Salas";
+        ArrayList<Sala> salas=new ArrayList<>();
+        try{
+            PreparedStatement ps= con.prepareStatement(query);
+            ResultSet res=ps.executeQuery();
+            while(res.next()){
+                int id_sala=res.getInt("id_sala");
+                String nombre =res.getString("nombre");
+                int no_asientos=res.getInt("no_asientos");
+                int no_columnas=res.getInt("no_columnas");
+                int no_filas=res.getInt("no_filas");
+                int id_cinema=res.getInt("id_cinema");
+                Sala s=new Sala(id_sala,nombre,no_asientos,no_columnas,no_filas,id_cinema);
+                salas.add(s);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        control.closeConection();
+        return salas;
+    }
+
+    public Sala getSala(int id){
+        Connection con=control.getConection();
+        String query="SELECT * FROM Salas where =?";
+        Sala s=null;
+        try{
+            PreparedStatement ps= con.prepareStatement(query);
+            ps.setInt(1,id);
+            ResultSet res=ps.executeQuery();
+            if(res.next()){
+                int id_sala=res.getInt("id_sala");
+                String nombre =res.getString("nombre");
+                int no_asientos=res.getInt("no_asientos");
+                int no_columnas=res.getInt("no_columnas");
+                int no_filas=res.getInt("no_filas");
+                int id_cinema=res.getInt("id_cinema");
+                s=new Sala(id_sala,nombre,no_asientos,no_columnas,no_filas,id_cinema);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        control.closeConection();
+        return s;
+    }
+
+    public void deleteSala(int id){
+        Connection con = control.getConection();
+        String query = "delete FROM Salas where id_sala=?";
+        try {
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, id);
+            int filasAfectadas = ps.executeUpdate();
+            if (filasAfectadas > 0) {
+                System.out.println("deleted sala");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        control.closeConection();
     }
 
 
