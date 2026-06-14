@@ -334,5 +334,84 @@ public class Database {
         control.closeConection();
     }
 
+    //CRUD ventas
+    public void addVenta(Venta v){
+        Connection con=control.getConection();
+        String query="INSERT INTO Salas (comprador) VALUES(?)";
+        try{
+            PreparedStatement ps=con.prepareStatement(query);
+            ps.setString(1,v.getComprador());
 
+            int filasAfectadas = ps.executeUpdate();
+            if (filasAfectadas > 0) {
+                System.out.println("Venta already added succesfully");
+            }
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        control.closeConection();
+
+    }
+
+    public ArrayList<Venta> ListVentas(){
+        Connection con=control.getConection();
+        String query="SELECT * FROM Ventas";
+        ArrayList<Venta> ventas=new ArrayList<>();
+        try{
+            PreparedStatement ps= con.prepareStatement(query);
+            ResultSet res=ps.executeQuery();
+            while(res.next()){
+                int id_venta=res.getInt("id_venta");
+                String comprador =res.getString("comprador");
+                int no_asientos_reservados=res.getInt("no_asientos_reservados");
+                double importe=res.getDouble("importe");
+                Venta v=new Venta(id_venta,comprador,no_asientos_reservados,importe);
+                ventas.add(v);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        control.closeConection();
+        return ventas;
+    }
+
+    public Venta getVenta(int id){
+        Connection con = control.getConection();
+        String query = "SELECT * FROM Ventas where id_venta=?";
+        Venta v = null;
+        try {
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, id);
+            ResultSet res = ps.executeQuery();
+
+            if (res.next()) {
+                v = new Venta();
+
+                v.setId_venta(res.getInt("id_venta"));
+                v.setComprador(res.getString("comprador"));
+                v.setImporte(res.getDouble("importe"));
+                v.setNo_asientos_reservados(res.getInt("no_asientos_reservados"));
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        control.closeConection();
+        return v;
+    }
+
+    public void deleteVenta(int id){
+        Connection con = control.getConection();
+        String query = "delete FROM Ventas where id_venta=?";
+        try {
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, id);
+            int filasAfectadas = ps.executeUpdate();
+            if (filasAfectadas > 0) {
+                System.out.println("deleted venta");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        control.closeConection();
+    }
 }

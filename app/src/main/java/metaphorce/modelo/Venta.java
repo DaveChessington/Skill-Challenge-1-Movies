@@ -6,6 +6,15 @@ public class Venta {
     private int no_asientos_reservados;
     private double importe;
 
+    public Venta(){}
+
+    public Venta(int id_venta, String comprador, int no_asientos_reservados, double importe) {
+        this.id_venta = id_venta;
+        this.comprador = comprador;
+        this.no_asientos_reservados = no_asientos_reservados;
+        this.importe = importe;
+    }
+
     public int getId_venta() {
         return id_venta;
     }
